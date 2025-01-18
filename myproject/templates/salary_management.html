@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Management</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Copy root variables and body styles from home.html */
+        :root {
+            --primary-color: #0055a6;
+            --secondary-color: #b2e8ff;
+            --accent-color: #3498db;
+            --text-color: #2c3e50;
+            --background-color: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('{% static "back.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: blur(8px);
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+            z-index: -1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+            background: transparent;
+        }
+
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        /* Copy header and nav styles from home.html */
+        header {
+            background: rgba(0, 85, 166, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .header-text {
+            text-align: center;
+        }
+
+        /* Copy remaining styles from home.html */
+        /* ... copy all other relevant styles ... */
+
+        /* Additional styles specific to salary management */
+        select,
+        input[type="month"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .salary-section {
+            margin-bottom: 2rem;
+        }
+
+        .calculation-result {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* Updated styles for salary management */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .form-group label {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: calc(100% - 2rem);
+            margin-bottom: 0;
+        }
+
+        .glass-form {
+            margin-bottom: 1rem;
+        }
+
+        nav {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    nav ul {
+        list-style: none;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    nav ul li {
+        margin: 0;
+    }
+
+    nav ul li a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-size: 0.95rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        display: block;
+    }
+
+    nav ul li a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--accent-color);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    nav ul li a:hover {
+        color: var(--accent-color);
+        background-color: rgba(52, 152, 219, 0.1);
+        transform: translateY(-2px);
+    }
+
+    nav ul li a:hover::after {
+        width: 80%;
+    }
+
+    @media (max-width: 768px) {
+        nav ul {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        nav ul li a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+    .hh {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2rem;
+            margin: 1rem 0;
+        }
+
+    .hp {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{% static 'img_logo.png' %}" alt="Faculty Management Logo" class="header-logo">
+        <div class="header-text">
+            <h1 class="hh">Faculty Management System</h1>
+            <p class="hp">Efficiently Manage Faculty Information</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/faculty_reg">Faculty Registration</a></li>
+            <li><a href="/attendance">Faculty Management</a></li>
+            <li><a href="/salary_management">Salary Management</a></li>
+        </ul>
+    </nav>
+
+    <h2 style="color: #f8fafc;">Salary Management</h2>
+
+    <div class="form-container">
+        <form action="/generate-salary-slip" method="post" class="glass-form">
+            {% csrf_token %}
+            <h3>Generate Salary Slip</h3>
+            <div class="form-group">
+                <label for="faculty-id">Faculty ID:</label>
+                <input type="text" id="faculty-id" name="faculty-id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="month">Month:</label>
+                <input type="month" id="month" name="month" required>
+            </div>
+
+            <button type="submit">Generate Slip</button>
+        </form>
+
+        <form action="/automate-calculations" method="post" class="glass-form">
+            {% csrf_token %}
+            <h3>Automate Salary Calculations</h3>
+            
+            <div class="form-group">
+                <label for="designation">Designation:</label>
+                <input type="text" id="designation" name="designation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="experience">Years of Experience:</label>
+                <input type="number" id="experience" name="experience" required>
+            </div>
+
+            <div class="form-group">
+                <label for="hours-worked">Hours Worked:</label>
+                <input type="number" id="hours-worked" name="hours-worked" required>
+            </div>
+
+            <div class="form-group">
+                <label for="allowances">Allowances:</label>
+                <input type="number" id="allowances" name="allowances" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bonuses">Bonuses:</label>
+                <input type="number" id="bonuses" name="bonuses">
+            </div>
+
+            <div class="form-group">
+                <label for="deductions">Deductions (Taxes, PF, Loans):</label>
+                <input type="number" id="deductions" name="deductions">
+            </div>
+
+            <button type="submit">Calculate Salary</button>
+        </form>
+
+        <form action="/payment-modes" method="post" class="glass-form">
+            {% csrf_token %}
+            <h3>Payment Modes</h3>
+            
+            <div class="form-group">
+                <label for="faculty-id-payment">Faculty ID:</label>
+                <input type="text" id="faculty-id-payment" name="faculty-id-payment" required>
+            </div>
+
+            <div class="form-group">
+                <label for="payment-mode">Select Payment Mode:</label>
+                <select id="payment-mode" name="payment-mode" required>
+                    <option value="bank-transfer">Bank Transfer</option>
+                    <option value="upi">UPI</option>
+                    <option value="cheque">Cheque</option>
+                </select>
+            </div>
+
+            <button type="submit">Submit Payment</button>
+        </form>
+    </div>
+</body>
+</html>
